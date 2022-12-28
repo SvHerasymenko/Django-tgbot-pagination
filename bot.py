@@ -19,7 +19,7 @@ def numer_buttons():
     return page
 count_pages = math.ceil(count_products/10)
 pages = Paginator(get_id,10)
-
+page1 = pages.page(1)
     
     
 
@@ -54,30 +54,16 @@ def productslist(message):
 
 @bot.callback_query_handler(func=lambda call : True)
 @logger.catch
-
 def product_description(call):
     global count_pages
-    print(call.data)
+    print(call.message)
     description = types.InlineKeyboardMarkup(row_width=7)
     first_page = types.InlineKeyboardButton(text="<<", callback_data="page 1")
     last_page = types.InlineKeyboardButton(text=">>", callback_data=f"page " + str(count_pages))
     for q in get_id:
         if call.data == str(get_name(q)):
-            description.add(types.InlineKeyboardButton(text="🔙 Back", callback_data="back to "+str(q)))
+            description.add(types.InlineKeyboardButton(text="🔙 Back", callback_data="page "+str(q)))
             bot.delete_message(call.message.chat.id, call.message.id)
             bot.send_photo(call.message.chat.id, get_image(q),caption=f"{get_name(q)}\n{get_description(q)}\n{get_price(q)}", reply_markup=description)
-
-
-    for g in range(1,(count_pages + 1)):
-        for p in pages.page(g):          
-            if call.data == "back to "+str(p):
-                for i in pages.page(g):
-                    description.add(types.InlineKeyboardButton(text = f'{get_name(i)}', callback_data= f'{get_name(i)}'))
-                description.add(first_page,types.InlineKeyboardButton(text=f'{pages.page(current_page).number}', callback_data=f'{pages.page(current_page).number}'),last_page)
-                bot.delete_message(chat_id = call.message.chat.id,message_id = call.message.id)
-                bot.send_message(call.message.chat.id,text="Products",reply_markup=description)
-    for f in pages.page_range:
-        if call.data == "page "+str(f):
-            print("f")
 
 bot.infinity_polling()

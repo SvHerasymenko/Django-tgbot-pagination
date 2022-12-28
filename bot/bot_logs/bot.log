@@ -3446,3 +3446,37 @@ telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsucc
 2022-12-28T22:01:25.382395+0000 INFO function (start) is worked!
 2022-12-28T22:01:26.774738+0000 INFO function productlist worked
 2022-12-28T22:02:03.888778+0000 INFO function productlist worked
+2022-12-28T22:17:43.020775+0000 ERROR An error has been caught in function '_run_middlewares_and_handler', process 'MainProcess' (110884), thread 'WorkerThread2' (140570839746112):
+Traceback (most recent call last):
+
+  File "/usr/lib64/python3.10/threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x7fd935feed40>
+    └ <WorkerThread(WorkerThread2, started daemon 140570839746112)>
+  File "/usr/lib64/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+    │    └ <function WorkerThread.run at 0x7fd935df8430>
+    └ <WorkerThread(WorkerThread2, started daemon 140570839746112)>
+  File "/home/Bagi/.local/lib/python3.10/site-packages/telebot/util.py", line 100, in run
+    task(*args, **kwargs)
+    │     │       └ {'handlers': [{'function': <function product_description at 0x7fd934601b40>, 'pass_bot': False, 'filters': {'func': <function...
+    │     └ (<telebot.types.CallbackQuery object at 0x7fd934655ff0>,)
+    └ <bound method TeleBot._run_middlewares_and_handler of <telebot.TeleBot object at 0x7fd933c5d8d0>>
+> File "/home/Bagi/.local/lib/python3.10/site-packages/telebot/__init__.py", line 6308, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             │                   └ <telebot.types.CallbackQuery object at 0x7fd934655ff0>
+             └ {'function': <function product_description at 0x7fd934601b40>, 'pass_bot': False, 'filters': {'func': <function <lambda> at 0...
+
+  File "/home/Bagi/django-product-dot/tg_store/bot.py", line 76, in product_description
+    description.add(first_page,types.InlineKeyboardButton(text=f'{pages.page(current_page).number}', callback_data=f'{pages.page(current_page).number}'),last_page)
+    │           │   │          │     │                                                                                                                   └ <telebot.types.InlineKeyboardButton object at 0x7fd934654940>
+    │           │   │          │     └ <class 'telebot.types.InlineKeyboardButton'>
+    │           │   │          └ <module 'telebot.types' from '/home/Bagi/.local/lib/python3.10/site-packages/telebot/types.py'>
+    │           │   └ <telebot.types.InlineKeyboardButton object at 0x7fd9346559f0>
+    │           └ <function InlineKeyboardMarkup.add at 0x7fd935d1b400>
+    └ <telebot.types.InlineKeyboardMarkup object at 0x7fd934655e70>
+
+NameError: name 'current_page' is not defined
+2022-12-28T22:32:55.104170+0000 INFO function productlist worked
+2022-12-28T22:33:44.348863+0000 INFO function productlist worked
+2022-12-28T22:42:17.239926+0000 INFO function (start) is worked!
