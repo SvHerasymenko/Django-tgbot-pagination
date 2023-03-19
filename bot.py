@@ -1,3 +1,4 @@
+#importing the librarys
 from telebot.async_telebot import AsyncTeleBot
 from telebot import types
 import os,time,math,asyncio,django
@@ -7,18 +8,24 @@ django.setup()
 from django.core.management.base import BaseCommand
 from django.core.paginator import Paginator
 from dborm import get_id,get_name,get_price,get_description,count_products,get_image
+
+#connect logging to the project
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 logger.add("bot/logs/bot.log", format="{time} {level} {message}", rotation="10MB", compression="zip")
 
 get_id = get_id()
 count_products = count_products()
+
+#connecting the tg bot token
 bot = AsyncTeleBot('')
 
+#creating lists for pagination
 count_pages = math.ceil(count_products/10)
 pages = Paginator(get_id,10)
 page1 = pages.page(1)
 
+#an initial function with the creation of built-in buttons
 @bot.message_handler(commands = ['start'])
 async def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -28,6 +35,8 @@ async def start(message):
         logger.info("function (start) is worked!")
     else:
         logger.error("Bot didn`t command start")
+        
+#A function that displays an image of the product and its description       
 @bot.message_handler(content_types=['text'])
 @logger.catch
 async def productslist(message):
@@ -54,6 +63,7 @@ async def productslist(message):
     else:
         logger.error("!ERROR! function productlist not worked !")
 
+#Pagination
 @bot.callback_query_handler(func=lambda call : True)
 @logger.catch
 async def product_description(call):
@@ -95,7 +105,7 @@ async def product_description(call):
                 await bot.delete_message(call.message.chat.id, call.message.message_id)
                 try:await bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id, text="Products:", reply_markup=products1)
                 except:await bot.send_message(call.message.chat.id, text="Products:", reply_markup=products1)
-            
+#start tg bot work
 while True:
     try:
         logger.info("start bot")
